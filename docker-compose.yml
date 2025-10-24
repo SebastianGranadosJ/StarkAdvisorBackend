@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backend:
-    image: starkadvisor-backend:latest
+    build: .   # 👈 Construye la imagen local desde el Dockerfile en este directorio
     container_name: starkadvisor-backend
     ports:
       - "8000:8000"
