@@ -1,54 +1,57 @@
 # StarkAdvisor
 # StarkAdvisor Backend
 
-Este README describe cómo instalar y configurar el backend Django `StarkAdvisorBackend` en entorno de desarrollo y producción, teniendo en cuenta la estructura de configuraciones en `starkadvisorbackend/settings/`.
+This README explains how to install and configure the Django backend `StarkAdvisorBackend` in both development and production environments, following the multi-settings structure located in `starkadvisorbackend/settings/`.
 
-## Resumen rápido
-- Proyecto: Django (estructura multi-settings: `base.py`, `local.py`, `production.py`).
-- Configuración por defecto en `manage.py` apunta a `starkadvisorbackend.settings.local`.
-- El proyecto usa variables de entorno gestionadas con `django-environ`.
-- Hay un `Pipfile`/`Pipfile.lock` en el repositorio; también puedes usar `requirements.txt`.
+## Quick Overview
+- Project: Django (multi-settings structure: `base.py`, `local.py`, `production.py`).
+- Default configuration in `manage.py` points to `starkadvisorbackend.settings.local`.
+- The project uses environment variables managed with `django-environ`.
+- The repository includes a `Pipfile`/`Pipfile.lock`, but `requirements.txt` may also be used.
 
-## Prerrequisitos
+## Prerequisites
 - Python 3.11+
 - Git
-- (Opcional) Docker / Docker Compose para servicios como PostgreSQL y Redis
+- (Optional) Docker / Docker Compose for services such as PostgreSQL and Redis
 
-## Archivos de configuración
-- `starkadvisorbackend/settings/base.py` — configuración común (env, MONGO, DRF, apps, etc.).
-- `starkadvisorbackend/settings/local.py` — configuración para desarrollo (DEBUG=True, DB local por defecto, CORS abierto, middleware de desarrollo).
-- `starkadvisorbackend/settings/production.py` — configuración para producción (DEBUG=False, HTTPS, PostgreSQL, Redis, logs, `STATIC_ROOT`, `MEDIA_ROOT`).
+## Configuration Files
+- `starkadvisorbackend/settings/base.py` — common settings (environment, MONGO, DRF, installed apps, etc.).
+- `starkadvisorbackend/settings/local.py` — development settings (DEBUG=True, default local DB, open CORS, dev middleware).
+- `starkadvisorbackend/settings/production.py` — production settings (DEBUG=False, HTTPS, PostgreSQL, Redis, logging, `STATIC_ROOT`, `MEDIA_ROOT`).
 
-Las configuraciones leen variables de entorno mediante `environ.Env()`.
-Variables importantes (defínelas en un `.env` o en el entorno):
-- `SECRET_KEY` (obligatoria en producción)
+These settings read environment variables via `environ.Env()`.  
+Key variables (define them in a `.env` file or in the system environment):
+
+- `SECRET_KEY` (required in production)
 - `DEBUG` (True/False)
-- `ALLOWED_HOSTS` (coma-separados)
-- DB (Postgres): `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`
-- Redis: `REDIS_URL` o `REDIS_HOST`, `REDIS_PORT`, `REDIS_DB`
-- Mongo: `MONGO_URI` o `MONGO_NAME`, `MONGO_HOST`, `MONGO_PORT` (el `MONGO_URI` tiene precedencia si está presente)
-- Opcionales chatbot: `FAQ_PATH`, `FAQ_MODEL_PATH`, `FINANCIAL_NEWS_SOURCES`
+- `ALLOWED_HOSTS` (comma-separated)
+- Database (Postgres): `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`
+- Redis: `REDIS_URL` or `REDIS_HOST`, `REDIS_PORT`, `REDIS_DB`
+- Mongo: `MONGO_URI` or `MONGO_NAME`, `MONGO_HOST`, `MONGO_PORT` (if `MONGO_URI` exists, it takes precedence)
+- Optional chatbot variables: `FAQ_PATH`, `FAQ_MODEL_PATH`, `FINANCIAL_NEWS_SOURCES`
 
-## Instalación (Desarrollo - opción A: Pipenv)
-Si usas Pipenv (hay `Pipfile`):
+
+## Installation (Development – Option A: Pipenv)
+If you prefer using Pipenv (a `Pipfile` is provided):
 
 ```powershell
-# Instala pipenv (si no lo tienes)
+# Install pipenv (if you don't have it)
 pip install --user pipenv
 
-# Desde la raíz del repo
+# From the root of the repository
 cd C:\Users\ASUS\Desktop\X\StarkAdvisorBackend
 pipenv install --dev
 
-# Activar shell de pipenv
+# Activate pipenv shell
 pipenv shell
-```
 
-Generar `requirements.txt` desde `Pipfile.lock` (si necesitas):
+```
+Generate requirements.txt from Pipfile.lock (if needed):
 
 ```powershell
 pipenv lock -r > requirements.txt
 pipenv lock -r -d > requirements-dev.txt
+
 ```
 
 ## Instalación (Desarrollo - opción B: venv y pip)
@@ -58,10 +61,12 @@ python -m venv .venv
 . .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
+
 ```
 
-## Variables de entorno (.env)
-Crea un archivo `.env` en la raíz con, como mínimo, las variables necesarias. Ejemplo mínimo para desarrollo (ajusta valores):
+## Environment Variables (.env)
+Create a .env file in the project root with at least the required variables.
+Minimal example for development (adjust values as needed):
 
 ```
 # .env
@@ -81,73 +86,92 @@ MONGO_NAME=starkadvisor
 MONGO_HOST=localhost
 MONGO_PORT=27017
 ```
+The project uses `environ.Env.read_env()` inside `base.py`, so if the `.env` file is located in the root directory, it will be loaded automatically.
 
-El proyecto usa `environ.Env.read_env()` en `base.py`, así que si `.env` está en la raíz será cargado automáticamente.
-
-## Arrancar servicios (con Docker Compose local)
-Si prefieres usar Docker para Postgres y Redis, hay un `docker-compose.local.yml`.
+## Starting Services (Local Docker Compose)
+If you prefer using Docker for PostgreSQL and Redis, a `docker-compose.local.yml` file is included.
 
 ```powershell
-# Levantar servicios
+# Start services
 docker-compose -f docker-compose.local.yml up -d
 
-# Verificar contenedores
+# Check containers
 docker ps
+
 ```
 
-## Migraciones, superusuario y pruebas
+## Migrations, Superuser, and Tests
 ```powershell
-# Activar virtualenv/pipenv si aplica
+# Activate virtualenv/pipenv if applicable
 . .\.venv\Scripts\Activate.ps1
-# o pipenv shell
+# or: pipenv shell
 
-# Aplicar migraciones
+# Apply migrations
 python manage.py migrate
 
-# Crear superusuario
+# Create superuser
 python manage.py createsuperuser
 
-# Ejecutar tests
+# Run tests
 python manage.py test
+
 ```
 
-## Ejecutar servidor (desarrollo)
-Por defecto `manage.py` carga `starkadvisorbackend.settings.local`.
+## Run Development Server
+By default, `manage.py` loads `starkadvisorbackend.settings.local`.
 
 ```powershell
 python manage.py runserver
+
 ```
 
-## Recolectar estáticos y despliegue básico (producción)
-En producción asegúrate de definir `DJANGO_SETTINGS_MODULE=starkadvisorbackend.settings.production` y de configurar un WSGI server (gunicorn/uWSGI) y un proxy reverso (nginx).
+## Collect Static Files & Basic Production Deployment
+In production, make sure to set `DJANGO_SETTINGS_MODULE=starkadvisorbackend.settings.production`and configure a WSGI server (gunicorn/uWSGI) plus a reverse proxy (nginx).
 
 ```powershell
-# Ejemplo de variables de entorno (PowerShell)
+# Example environment variables (PowerShell)
 $env:DJANGO_SETTINGS_MODULE = "starkadvisorbackend.settings.production"
 $env:SECRET_KEY = "<tu-secret>"
-# Resto de variables DB y Redis...
+# Other DB and Redis variables...
 
-# Recolectar estáticos
+# Collect static files
 python manage.py collectstatic --noinput
 
-# Ejecutar con gunicorn (instálalo primero)
+# Run with gunicorn (install it first)
+
 gunicorn starkadvisorbackend.wsgi:application --bind 0.0.0.0:8000
 ```
+## Logs, Static, and Media
 
-## Logs, Static y Media
-- `STATIC_ROOT` en producción apunta a `<BASE_DIR>/staticfiles`.
-- `MEDIA_ROOT` apunta a `<BASE_DIR>/media`.
-- Los logs (errores) se guardan en `logs/django_errors.log` según `production.py`.
+- `STATIC_ROOT` in production points to `<BASE_DIR>/staticfiles`.
+- `MEDIA_ROOT` points to `<BASE_DIR>/media`.
+- Error logs are stored in `logs/django_errors.log` according to the `production.py` configuration.
 
-Asegúrate de que el usuario del proceso tenga permisos de escritura a esos directorios.
+Make sure the process user has write permissions for these directories.
 
-## Recomendaciones
-- Versiona `Pipfile.lock` o `requirements.txt` para que otros reproductores obtengan las mismas versiones.
-- No subas tu `.env` al repositorio.
-- Usa `pip-tools` (`pip-compile`) si quieres separar `requirements.in` (top-level) y `requirements.txt` (locked).
+---
 
-## Cómo generar `requirements.txt` rápidamente
-- Desde el entorno activo:
+## Recommendations
+
+- Commit your `Pipfile.lock` or `requirements.txt` to ensure others install the exact same versions.
+- Do not upload your `.env` file to the repository.
+- If you want better dependency management, use `pip-tools` (`pip-compile`) to separate:
+  - `requirements.in` → Declared (top-level) dependencies.
+  - `requirements.txt` → Fully resolved and locked dependencies.
+
+---
+
+## How to quickly generate `requirements.txt`
+
+With your virtual environment activated:
+
+```bash
+pip freeze > requirements.txt
+
+
+```bash
+pip freeze > requirements.txt
+
 
 ```powershell
 pip freeze > requirements.txt
@@ -160,114 +184,126 @@ pip install --user pip-tools
 pip-compile --output-file=requirements.txt requirements.in
 ```
 
-## Notas específicas sobre la carpeta `starkadvisorbackend/settings`
-- `local.py` inserta un middleware `starkadvisorbackend.middleware.DisableCSRFMiddleware` para desarrollo (verifica si necesitas habilitar CSRF en entornos abiertos).
-- `production.py` fuerza HTTPS (`SECURE_SSL_REDIRECT = True`) y cookies seguras; completa todas las variables de entorno antes de activar producción.
-- Mongo se configura desde `base.py` vía `MONGO_DB` / `MONGO_URI`.
-- FAQ y modelos de chatbot se refieren a rutas relativas, controla `FAQ_PATH` y `FAQ_MODEL_PATH` si modificas la estructura de carpetas.
+## Specific Notes About the `starkadvisorbackend/settings` Folder
 
-### Cambiar qué settings usa Django (manage.py / wsgi / asgi)
-En este proyecto `manage.py`, `wsgi.py` y `asgi.py` por defecto usan `starkadvisorbackend.settings.local`.
-Si quieres cambiar a producción u otro archivo de settings debes ajustar la variable de entorno `DJANGO_SETTINGS_MODULE` en los tres lugares donde corresponda (o definirla globalmente en el entorno del proceso).
+- `local.py` includes the middleware `starkadvisorbackend.middleware.DisableCSRFMiddleware` for development (make sure you enable CSRF in any non-local/open environment).
+- `production.py` enforces HTTPS (`SECURE_SSL_REDIRECT = True`) and secure cookies; ensure all required environment variables are set before enabling production mode.
+- MongoDB is configured in `base.py` through `MONGO_DB` / `MONGO_URI`.
+- FAQ files and chatbot models rely on relative paths, so update `FAQ_PATH` and `FAQ_MODEL_PATH` if you change the project’s folder structure.
 
-Ejemplos:
+---
+
+### Changing Which Settings Django Uses (manage.py / wsgi / asgi)
+
+In this project `manage.py`, `wsgi.py`, and `asgi.py` load `starkadvisorbackend.settings.local` by default.  
+If you want to switch to production or another settings module, you must update the `DJANGO_SETTINGS_MODULE` environment variable in all three entry points (or define it globally in the process environment).
+
+**Examples:**
 
 ```powershell
-# Definir para la sesión actual (PowerShell)
+#  Define for the current session (PowerShell)
 $env:DJANGO_SETTINGS_MODULE = "starkadvisorbackend.settings.production"
 
-# Para WSGI/ASGI en despliegue (ejemplo systemd) exporta la variable en el servicio que arranca gunicorn/uvicorn
+# For WSGI/ASGI in deployment (systemd example), export the variable in the service that starts gunicorn/uvicorn
 ```
 
-También puedes editar directamente `wsgi.py` y `asgi.py` si necesitas un valor por defecto distinto al momento de deploy (no recomendado — mejor definir `DJANGO_SETTINGS_MODULE` desde el entorno del sistema):
+You can also directly edit wsgi.py and asgi.py if you need a different default value during deployment (not recommended — it’s better to set DJANGO_SETTINGS_MODULE from the system environment):
 
 ```python
-# ejemplo en wsgi.py/asgi.py
+# example in wsgi.py/asgi.py
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'starkadvisorbackend.settings.production')
 ```
+### Mongo and Redis: `*_URI` vs individual variables (precedence)
 
-### Mongo y Redis: `*_URI` vs variables individuales (precedencia)
-Las settings para Mongo y Redis en este proyecto aceptan dos estilos:
+The settings for Mongo and Redis in this project accept two styles:
 
-- URI completa (p. ej. `MONGO_URI`, `REDIS_URL`) — forma compacta que incluye esquema, host, puerto, base y credenciales.
-- Variables individuales (p. ej. `MONGO_HOST`, `MONGO_PORT`, `MONGO_NAME` o `REDIS_HOST`, `REDIS_PORT`, `REDIS_DB`).
+- Full URI (e.g., `MONGO_URI`, `REDIS_URL`) — a compact format that includes scheme, host, port, database, and credentials.
+- Individual variables (e.g., `MONGO_HOST`, `MONGO_PORT`, `MONGO_NAME` or `REDIS_HOST`, `REDIS_PORT`, `REDIS_DB`).
 
-Comportamiento y recomendación:
+Behavior and recommendation:
 
-- Si se provee `MONGO_URI` en el entorno (no-nulo), el proyecto usará esa URI para conectar a Mongo y las variables individuales de Mongo serán ignoradas.
-- De forma similar, si `REDIS_URL` está presente, se usará esa URL y las variables `REDIS_HOST`/`REDIS_PORT`/`REDIS_DB` no serán tenidas en cuenta.
-- Esto permite flexibilidad: en local puedes usar variables individuales, y en producción usar una única URI gestionada por tu proveedor (p. ej. `mongodb+srv://...` o `rediss://...`).
+- If `MONGO_URI` is provided in the environment (non-null), the project will use that URI to connect to Mongo, and the individual Mongo variables will be ignored.
+- Similarly, if `REDIS_URL` is present, that URL will be used and the variables `REDIS_HOST`/`REDIS_PORT`/`REDIS_DB` will not be considered.
+- This provides flexibility: locally you can use individual variables, and in production you can use a single URI provided by your hosting provider (e.g., `mongodb+srv://...` or `rediss://...`).
 
-Ejemplos de `.env` con URI completa:
+Examples of `.env` using full URI:
+
 
 ```
 MONGO_URI=mongodb://user:pass@mongo-host:27017/starkadvisor
 REDIS_URL=redis://:password@redis-host:6379/0
 ```
 
-Si no usas las URIs, define las variables individuales que están documentadas en `starkadvisorbackend/settings/base.py` y `local.py`.
+If you are not using URIs, define the individual variables documented in  
+`starkadvisorbackend/settings/base.py` and `local.py`.
 
-## Contribuir
-1. Fork y crea una rama feature
-2. Ejecuta pruebas localmente
-3. Haz PR hacia `main` con una descripción clara
+## Contributing
+1. Fork the repo and create a feature branch.  
+2. Run tests locally.  
+3. Open a PR to `main` with a clear description.
 
 ---
 
-Si quieres, puedo:
-- Crear un `.env.example` con las variables más importantes.
-- Actualizar `requirements.txt` automáticamente desde tu entorno actual (vi que ejecutaste `pip freeze > requirements.txt`).
-- Añadir instrucciones específicas de Docker/Nginx para producción.
+If you want, I can:
+- Create a `.env.example` with the most important variables.  
+- Update `requirements.txt` automatically from your current environment (I saw you ran `pip freeze > requirements.txt`).  
+- Add specific Docker/Nginx instructions for production.
 
-Dime qué prefieres y lo hago.
+Tell me what you prefer and I’ll do it.
 
-## Comandos útiles y recomendaciones de ejecución periódica
-A continuación se listan los scripts CLI que existen en el proyecto y recomendaciones para ejecutarlos periódicamente (crontab). Todos los comandos asumen que estás en la raíz del repo y tienes el entorno virtual activado o usas pipenv.
+## Useful Commands and Recommended Periodic Execution
+Below is a list of CLI scripts available in the project and recommendations for running them periodically (crontab).  
+All commands assume you are in the repo root and have your virtual environment active (or are using pipenv).
 
-- Actualizar "Trade of the Day":
+- Update "Trade of the Day":
+
 
 ```powershell
 python -m stocks.scripts.update_trade_of_the_day_data
 ```
 
-Descripción: trae la información de los trades del día y guarda/actualiza el documento correspondiente en Mongo (colección `trade_of_the_day`).
-Recomendación: programar en cron cada 8 horas (por ejemplo: 0 */8 * * *), para mantener la información reciente sin sobrecargar las APIs.
+**Description:** Fetches the “trade of the day” information and saves/updates the corresponding document in Mongo (collection `trade_of_the_day`).  
+**Recommendation:** Schedule it in cron every 8 hours (for example: `0 */8 * * *`) to keep the information fresh without overloading the APIs.
 
-- Scraping de noticias:
+
+- News Scraping :
 
 ```powershell
 python -m news.scripts.scraping_job
 ```
 
-Descripción: ejecuta el scraper de noticias por categorías, realiza análisis de sentimiento y persiste los resultados en la base de datos.
-Recomendación: ejecutar una vez cada dos días (por ejemplo en cron: 0 3 */2 * *). Este job puede consumir rate limits de fuentes externas, por eso una frecuencia baja es recomendable.
+**Description:** Runs the category-based news scraper, performs sentiment analysis, and stores the results in the database.  
+**Recommendation:** Run it once every two days (for example in cron: `0 3 */2 * *`). This job may consume rate limits from external sources, so a low execution frequency is recommended.
 
-- Pipeline de mercado (todo en uno):
+- **Market Pipeline (all-in-one):**
 
 ```powershell
 python -m stocks.scripts.market_pipeline_cli run_all --period 5d --interval 1d
 ```
 
-Descripción: `run_all` descarga y actualiza métricas y series temporales para acciones, ETFs y divisas. Incluye tanto time series históricos como métricas calculadas.
-Recomendaciones:
+**Description:** `run_all` downloads and updates metrics and time series for stocks, ETFs, and currencies. It includes both historical time series and computed metrics.
 
-- Primera ejecución: si es la primera vez que lo ejecutas, trae los últimos 5 años (`--period 5y`) con `--interval 1d` para poblar la base histórica completa.
-- Ejecución diaria: para mantenimiento, programa un cron diario que actualice las métricas y series de los últimos 3 días a intervalo de 1 día (p. ej. `--period 3d --interval 1d`).
+**Recommendations:**
 
-Ejemplos de crontab (edítalos con `crontab -e` en Linux; en Windows usa el Programador de tareas):
+- **First run:** if this is your first time running it, fetch the last 5 years (`--period 5y`) with `--interval 1d` to populate the full historical database.
+- **Daily run:** for maintenance, schedule a daily cron job that updates metrics and time series for the last 3 days with a 1-day interval (e.g., `--period 3d --interval 1d`).
+
+**Crontab examples** (edit them with `crontab -e` on Linux; on Windows use Task Scheduler):
+
 
 ```cron
-# Cada 8 horas -> update_trade_of_the_day_data
+# Every 8 hours -> update_trade_of_the_day_data
 0 */8 * * * cd /path/to/StarkAdvisorBackend && . .venv/bin/activate && python -m stocks.scripts.update_trade_of_the_day_data
 
-# Cada 2 días a las 03:00 -> scraping_job
+# Every 2 days at 03:00 -> scraping_job
 0 3 */2 * * cd /path/to/StarkAdvisorBackend && . .venv/bin/activate && python -m news.scripts.scraping_job
 
-# Diario a las 02:00 -> pipeline de mercado (actualizar últimos 3 días)
+# Daily at 02:00 -> market pipeline (update last 3 days)
 0 2 * * * cd /path/to/StarkAdvisorBackend && . .venv/bin/activate && python -m stocks.scripts.market_pipeline_cli run_all --period 3d --interval 1d
 ```
 
-Notas:
-- Ajusta rutas y el comando de activación del virtualenv según tu OS (Windows PowerShell usa `. .\.venv\Scripts\Activate.ps1` o `venv\Scripts\activate`).
-- Si ejecutas dentro de contenedores (Docker), adapta los comandos para ejecutarlos dentro del contenedor o usa tareas programadas en el orquestador.
-- Revisa logs y límites de API externos (rate limits). Para scraping heavy, considera usar backoff y retries (el job ya implementa retries básicos).
+**Notes:**
+- Adjust paths and the virtual environment activation command according to your OS (Windows PowerShell uses `. .\.venv\Scripts\Activate.ps1` or `venv\Scripts\activate`).
+- If you run inside containers (Docker), adapt the commands to run inside the container or use scheduled tasks in the orchestrator.
+- Monitor logs and external API rate limits. For heavy scraping, consider using backoff and retries (the job already implements basic retries).
+
