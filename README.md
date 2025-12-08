@@ -24,7 +24,7 @@ It exposes structured endpoints that aggregate financial news through web scrapi
 ---
 ![Tech Stack](./docs/techstack.jpeg)
 ---
-## 🚀 Infrastructure Diagram
+## Infrastructure Diagram
 
 ![Tech Stack](./docs/infra-diagram.png)
 ---
