@@ -27,7 +27,7 @@ It exposes structured endpoints that aggregate financial news through web scrapi
 ![Tech Stack](./docs/techstack.jpeg)
 ---
 
-## 📰 News Aggregation & Sentiment Analysis Module
+## 📰 Financial News Module
 
 This module centralizes financial news from multiple sources to give users a concise, sentiment-aware overview of the market. Each news entry includes:
 
