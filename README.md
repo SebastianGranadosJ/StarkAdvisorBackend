@@ -70,15 +70,8 @@ Each article description is analyzed using a **DistilBERT** model from Hugging F
 
 The model returns a **sentiment label** (positive/negative) and a **confidence score**.
 
-#### **4. Smart Storage With Duplication Filtering**
-All processed news items are stored in **MongoDB**, along with:
-- Sentiment prediction  
-- Scraping timestamp metadata  
-
-Before inserting any article, the system checks:
-- Whether it has already been scraped  
-- Whether its publication date is older than the last scraping session  
-
-This ensures efficient crawling and avoids duplicate entries.
+#### **4. Smart Storage & Duplicate Prevention**
+All processed news items are stored in **MongoDB** along with their sentiment and scrape metadata.  
+Before saving, the system filters out articles already scraped or older than the last session, ensuring efficient crawling with no duplicates.
 
 
