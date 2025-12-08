@@ -75,3 +75,56 @@ All processed news items are stored in **MongoDB** along with their sentiment an
 Before saving, the system filters out articles already scraped or older than the last session, ensuring efficient crawling with no duplicates.
 
 
+## 📈 Financial Market Module
+
+This module provides **price charts, metrics, and technical indicators** for Stocks, ETFs, and Forex, enabling users to analyze trends and make informed decisions.
+
+### 🔹 Asset Pools
+
+**Stocks:**  
+- S&P 500 constituents  
+
+**ETFs:** 15 key ETFs representing indices, sectors, commodities, and strategies:
+
+- SPY – S&P 500 ETF  
+- VOO – Vanguard S&P 500 ETF  
+- QQQ – Nasdaq 100 ETF  
+- DIA – Dow Jones Industrial Average ETF  
+- IWM – Russell 2000 ETF  
+- EFA – MSCI EAFE ETF  
+- EEM – Emerging Markets ETF  
+- XLF – Financials Select Sector ETF  
+- XLK – Technology Select Sector ETF  
+- XLE – Energy Select Sector ETF  
+- XLV – Health Care Select Sector ETF  
+- GLD – Gold ETF  
+- SLV – Silver ETF  
+- ARKK – ARK Innovation ETF  
+- VTI – Vanguard Total Stock Market ETF  
+
+**Forex:** 10 highly liquid major and popular cross pairs covering ~95% of global volume:
+
+- **Majors:** EUR/USD, USD/JPY, GBP/USD, USD/CHF, AUD/USD, USD/CAD, NZD/USD  
+- **Crosses:** EUR/GBP, EUR/JPY, GBP/JPY  
+
+---
+
+### 🔹 Data Storage & Updates
+
+- **Metrics:** fetched from Yahoo Finance and updated several times daily (no historical storage).  
+- **Time Series:** stored historically at **daily granularity** in PostgreSQL; last 5 years of data preloaded via script.  
+
+**Query Behavior:**  
+- **1 Month / 1 Year / 5 Years:** data retrieved from PostgreSQL  
+- **1 Day / 5 Days:** data fetched directly from Yahoo Finance via a **Facade pattern** for clean abstraction and API consistency  
+
+---
+
+### 🔹 Features
+
+- Visualize historical **price charts** for all assets.  
+- Access key **metrics and technical indicators** for informed decision-making.  
+- Optimized for **fast updates** on short-term queries while preserving historical context for long-term analysis.  
+
+
+
