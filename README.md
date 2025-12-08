@@ -1,8 +1,8 @@
 # 🌐 Financial Intelligence Hub – Backend  
 *A centralized platform for smarter, data-driven financial decisions.*
 
-This backend powers a financial analytics platform designed to centralize market information and help users make informed investment decisions.  
-It aggregates financial news through web scraping, processes market data for stocks, ETFs, and currencies, computes technical indicators, recommends daily trading opportunities, and provides a multilingual AI chatbot capable of answering questions about both the platform and the financial world.
+This project is a **Backend API** that powers a financial analytics platform designed to centralize market information and help users make informed investment decisions.  
+It exposes structured endpoints that aggregate financial news through web scraping, process market data for stocks, ETFs, and currencies, compute technical indicators, recommend daily trading opportunities, and provide a multilingual AI chatbot capable of answering questions about both the platform and the financial world.
 
 ---
 
