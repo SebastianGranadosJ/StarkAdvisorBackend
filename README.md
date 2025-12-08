@@ -15,8 +15,6 @@ It exposes structured endpoints that aggregate financial news through web scrapi
 - **Centralized API** serving all data to the React frontend.  
 ---
 
-## 🧰 Tech Stack
-
 ![Tech Stack](./docs/techstack.jpeg)
 
 ---
