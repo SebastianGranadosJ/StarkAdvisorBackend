@@ -27,3 +27,58 @@ It exposes structured endpoints that aggregate financial news through web scrapi
 ![Tech Stack](./docs/techstack.jpeg)
 ---
 
+## 📰 News Aggregation & Sentiment Analysis Module
+
+This module centralizes financial news from multiple sources to give users a concise, sentiment-aware overview of the market. Each news entry includes:
+
+- **Title**
+- **Description**
+- **Publication date**
+- **Source**
+- **Original link**
+- **Sentiment score** (positive/negative + intensity)
+
+### 🔍 How It Works
+
+#### **1. Targeted News Discovery**
+The system builds a pool of news URLs using **Google News queries** generated from:
+- A predefined list of **financial topics**
+- A predefined set of **seed sources**
+
+Each query produces a Google News results page, which becomes the input for scraping.
+
+#### **2. Web Scraping Pipeline**
+For every Google News results page, the scraper extracts key elements using Google’s specific selectors:
+
+| Element        | CSS Selector      |
+|----------------|-------------------|
+| **Title**      | `div.n0jPhd`      |
+| **URL**        | `a.WlydOe`        |
+| **Description**| `div.GI74Re`      |
+| **Date**       | `div.rbYSKb`      |
+| **Source**     | `div.NUnG9d`      |
+
+The scraper normalizes the extracted data and prepares it for NLP processing.
+
+#### **3. Sentiment Analysis Using DistilBERT**
+Each article description is analyzed using a **DistilBERT** model from Hugging Face Transformers.
+
+**Why DistilBERT?**
+- ~97% of BERT’s accuracy  
+- ~40% fewer parameters  
+- Significantly faster inference (ideal for large scraping batches)
+
+The model returns a **sentiment label** (positive/negative) and a **confidence score**.
+
+#### **4. Smart Storage With Duplication Filtering**
+All processed news items are stored in **MongoDB**, along with:
+- Sentiment prediction  
+- Scraping timestamp metadata  
+
+Before inserting any article, the system checks:
+- Whether it has already been scraped  
+- Whether its publication date is older than the last scraping session  
+
+This ensures efficient crawling and avoids duplicate entries.
+
+
