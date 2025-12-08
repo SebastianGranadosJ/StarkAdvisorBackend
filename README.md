@@ -4,7 +4,7 @@
 🔑 Password: demo123456  
 
 📦 Frontend Repository:
-[https://github.com/SebastianGranadosJ/financial-intelligence-hub-front](https://github.com/SebastianGranadosJ/StarkAdvisorFrontend)
+https://github.com/SebastianGranadosJ/StarkAdvisorFrontend
 -->
 
 
