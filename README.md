@@ -1,3 +1,14 @@
+<!-- 
+🌐 Live Web App: https://d3iqcabelr1yf0.cloudfront.net/app/market  
+👤 Demo User: demo@example.com  
+🔑 Password: demo123456  
+
+📦 Frontend Repository:
+[https://github.com/SebastianGranadosJ/financial-intelligence-hub-front](https://github.com/SebastianGranadosJ/StarkAdvisorFrontend)
+-->
+
+
+
 # 🌐 Financial Intelligence Hub – Backend  
 *A centralized platform for smarter, data-driven financial decisions.*
 
@@ -14,8 +25,6 @@ It exposes structured endpoints that aggregate financial news through web scrapi
 - **AI Chatbot (EN/ES)** trained with NLP/ML models to answer financial and platform-related questions.  
 - **Centralized API** serving all data to the React frontend.  
 ---
-
 ![Tech Stack](./docs/techstack.jpeg)
-
 ---
 
