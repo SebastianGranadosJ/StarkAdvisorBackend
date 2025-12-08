@@ -22,10 +22,12 @@ It exposes structured endpoints that aggregate financial news through web scrapi
 - 📦 **Frontend Repository:**  
   https://github.com/SebastianGranadosJ/financial-intelligence-hub-front
 ---
-
-
 ![Tech Stack](./docs/techstack.jpeg)
 ---
+
+![Tech Stack](./docs/infra-diagram.png)
+---
+
 
 ## 📰 Financial News Module
 
