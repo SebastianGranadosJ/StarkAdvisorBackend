@@ -17,21 +17,7 @@ It exposes structured endpoints that aggregate financial news through web scrapi
 
 ## 🧰 Tech Stack
 
-### Backend & Infrastructure
-- **Python · Django**
-- **AWS EC2**, **AWS CloudFront**
-- **PostgreSQL (AWS Aurora)**  
-- **MongoDB Atlas**
-- **Redis** (cache & session management)
-
-### AI / NLP
-- **Hugging Face Transformers**
-- **Multilingual BERT**
-- **SpaCy**
-- **Scikit-Learn**
-
-### Frontend
-- **React + TypeScript**
+![Tech Stack](./docs/techstack.png)
 
 ---
 
