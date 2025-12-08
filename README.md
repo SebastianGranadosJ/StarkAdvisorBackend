@@ -130,4 +130,82 @@ This module provides **price charts, metrics, and technical indicators** for Sto
 - Optimized for **fast updates** on short-term queries while preserving historical context for long-term analysis.  
 
 
+## 🤖 AI Chatbot Module
+
+This module provides a **bilingual (EN/ES) chatbot** that answers frequently asked questions about the platform and basic financial concepts.
+
+### 🔹 Scope
+
+- **Platform FAQs:** 18 predefined questions, e.g.:  
+  - What is StarkAdvisor?  
+  - What limits does StarkAdvisor have?  
+  - ¿Quién hizo esto? / Who made StarkAdvisor?  
+  - Hello Starky  
+  - ¿Qué significa Trade del Día?  
+
+- **Financial Concepts:** 24 predefined questions, e.g.:  
+  - What is a stock?  
+  - What is a bond?  
+  - What is an ETF?  
+  - What is market capitalization?  
+  - What is a commodity?  
+  - What is ROI?  
+
+Each question type is treated as a **class**, and the bot is trained to handle multiple variations of each question.
+
+---
+
+### 🔹 How It Works
+
+1. **Question Normalization:**  
+   - Input is lemmatized using **spaCy** to standardize wording.  
+   - The spaCy model is loaded via **Hugging Face Transformers**.
+
+2. **Language Detection:**  
+   - The bot detects whether the question is in English or Spanish.
+
+3. **Classification & Response:**  
+   - The normalized question is passed to the **classifier**, which determines the question type.  
+   - If the bot is confident, it returns the **predetermined answer**.  
+   - If uncertain, the **failover module** provides a default response.
+
+4. **Logging:**  
+   - All received questions and responses are stored in **PostgreSQL** for monitoring and analytics.
+
+---
+
+### 🔹 Training
+
+- The chatbot was trained with **multiple variations per question** to improve classification robustness.  
+- Full training resources and scripts are available at:  
+  [Mbert Chatbot Training Repository](https://github.com/SebastianGranadosJ/Mbert-Chatbot-Training)
+
+---
+
+## 💹 Trade of the Day Module
+
+This module provides an **automated daily investment recommendation system** that highlights the best trades of the day based on quantitative analysis.
+
+### 🔹 How It Works
+
+- The system retrieves the **top 10 trades of the day** from a **Hugging Face API**.  
+- Each trade includes the following parameters:
+  - **Ticker:** asset symbol  
+  - **Expected Return (%):** projected gain over the next 21 days  
+  - **RSI (Relative Strength Index):** momentum indicator  
+  - **Description:** explanation of why it is considered a good investment  
+
+- These recommendations are updated daily and presented via the backend API for the frontend to display.
+
+---
+
+### 🔹 Features
+
+- Automated, **data-driven trade suggestions**.  
+- Combines **technical indicators** and external insights for each recommendation.  
+- Provides **concise reasoning** for each suggested trade to help users understand the rationale.  
+
+- API reference for the daily trades: [Hugging Face Trade API](https://huggingface.co/spaces/pschofield2/TradeOfTheDay)
+
+
 
